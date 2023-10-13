@@ -1,11 +1,4 @@
-# 🚨 Attention, le code présent dans ce fichier contient volontairement de nombreuses imperfections :
-# 🚨 erreurs de conception, mauvaises pratiques de développement logiciel, failles de sécurité et de performance.
-# 🚨 Ce code servira de support à un exercice de refactoring.
 version: "3.9"
-
-networks:
-  rps:
-    driver: bridge
 
 services:
   api:
@@ -16,34 +9,33 @@ services:
     working_dir: /usr/src/app
     command: npm start
     ports:
-      - 3000:3000
+      - "3000:3000"
     volumes:
       - ./api:/usr/src/app
-    links:
-      - db
     networks:
       - rps
+    depends_on:
+      - db
+
   db:
     image: mariadb
     container_name: rps-db
-    environment:
-      - MARIADB_ROOT_PASSWORD=azerty
-      - MARIADB_USER=rps
-      - MARIADB_DATABASE=rps
-      - MARIADB_PASSWORD=azerty
+    env_file:
+      - .env
     ports:
-      - 3306:3306
+      - "3306:3306"
     networks:
       - rps
+
   adminer:
     image: adminer
     container_name: rps-adminer
     environment:
-      - ADMINER_DEFAULT_SERVER=mariadb
+      ADMINER_DEFAULT_SERVER: db
     ports:
-      - 8181:8080
+      - "8181:8080"
     networks:
       - rps
-# 🚨 Attention, le code présent dans ce fichier contient volontairement de nombreuses imperfections :
-# 🚨 erreurs de conception, mauvaises pratiques de développement logiciel, failles de sécurité et de performance.
-# 🚨 Ce code servira de support à un exercice de refactoring.
+
+networks:
+  rps:
