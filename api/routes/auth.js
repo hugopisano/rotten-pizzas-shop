@@ -10,23 +10,13 @@ const md5 = require("md5");
 const express = require("express");
 const router = express.Router();
 
-var mysql = require("mysql");
-var connection = mysql.createConnection({
-  host: "db",
-  user: "rps",
-  password: "azerty",
-  database: "rps"
-});
-
-connection.connect();
-
 router.use(express.json());
 
 //SIGNUP
 router.post("/signup", (req, res) => {
   let pwd = md5(req.body.password);
 
-  connection.query(
+  req.db.query(
     `INSERT INTO users (firstname, lastname, email, role, password) VALUES ("${req.body.firstname}","${req.body.lastname}","${req.body.email}","${req.body.role}","${pwd}")`,
     function (err, rows, fields) {
       if (err) console.log(err);
@@ -42,7 +32,7 @@ router.post("/signup", (req, res) => {
 router.post("/signin", (req, res) => {
   let pwd = md5(req.body.password);
 
-  connection.query(
+  req.db.query(
     `SELECT * FROM users WHERE email = "${req.body.email}"`,
     function (err, rows, fields) {
       if (err) console.log(err);

@@ -7,16 +7,6 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
-var mysql = require("mysql");
-var connection = mysql.createConnection({
-  host: "db",
-  user: "rps",
-  password: "azerty",
-  database: "rps"
-});
-
-connection.connect();
-
 router.use(express.json());
 
 //CREATE
@@ -25,7 +15,7 @@ router.post("/", function (req, res) {
 
   jwt.verify(token, process.env.JWT_KEY, function (err, decoded) {
     if (err) res.json("unauthorized");
-    connection.query(
+    req.db.query(
       `INSERT INTO pizzas (name, price, available) VALUES ("${req.body.name}", ${req.body.price}, ${req.body.available})`,
       (err, rows, fields) => {
         if (err) console.log(err);
@@ -42,7 +32,7 @@ router.get("/", function (req, res) {
   if (req.query.name) {
     const query = `SELECT * FROM pizzas WHERE name = "${req.query.name}"`;
 
-    connection.query(query, (err, rows, fields) => {
+    req.db.query(query, (err, rows, fields) => {
       if (err) console.log(err);
 
       res.json(rows);
@@ -50,13 +40,13 @@ router.get("/", function (req, res) {
   } else if (req.query.available) {
     const query = `SELECT * FROM pizzas WHERE available = ${req.query.available}`;
 
-    connection.query(query, (err, rows, fields) => {
+    req.db.query(query, (err, rows, fields) => {
       if (err) console.log(err);
 
       res.json(rows);
     });
   } else {
-    connection.query(
+    req.db.query(
       "SELECT * FROM pizzas WHERE available = 1",
       (err, rows, fields) => {
         if (err) console.log(err);
@@ -76,7 +66,7 @@ router.put("/:id", function (req, res) {
 
     const query = `UPDATE pizzas SET id = ${req.body.id}, name = "${req.body.name}", price = ${req.body.price}, available = ${req.body.available} WHERE id = ${req.body.id}`;
 
-    connection.query(query, (err, rows, fields) => {
+    req.db.query(query, (err, rows, fields) => {
       if (err) console.log(err);
 
       res.json("updated");
@@ -88,7 +78,7 @@ router.put("/:id", function (req, res) {
 router.get("/:id", function (req, res) {
   const query = `SELECT * FROM pizzas WHERE available = 1 AND id =${req.params.id}`;
 
-  connection.query(query, (err, rows, fields) => {
+  req.db.query(query, (err, rows, fields) => {
     if (err) console.log(err);
 
     res.json(rows);
@@ -102,7 +92,7 @@ router.delete("/:id", function (req, res) {
   jwt.verify(token, process.env.JWT_KEY, function (err, decoded) {
     if (err) res.json("unauthorized");
 
-    connection.query(
+    req.db.query(
       `DELETE FROM pizzas WHERE id = ${req.params.id}`,
       (err, rows, fields) => {
         if (err) console.log(err);

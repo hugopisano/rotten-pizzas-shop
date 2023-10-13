@@ -13,24 +13,31 @@ const auth = require("./routes/auth");
 
 const mysql = require("mysql");
 const connection = mysql.createConnection({
-  host: "db",
-  user: "rps",
-  password: "azerty",
-  database: "rps"
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 connection.connect(function (err) {
   if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
+    console.error("Error connecting: " + err.stack);
+    process.exit(1);
   }
 
-  console.log("connected as id " + connection.threadId);
+  console.log("Connected as id " + connection.threadId);
 });
+
+app.use((req, res, next) => {
+  req.db = connection;
+  next();
+});
+
 
 app.use("/orders", orders);
 app.use("/pizzas", pizzas);
 app.use("/auth", auth);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
