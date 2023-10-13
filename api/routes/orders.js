@@ -100,7 +100,6 @@ router.patch("/:id", function (req, res) {
       req.db.query(query2, (err, rows, fields) => {
         if (err) console.log(err);
 
-        let amount = rows[0].amount;
         let user_id = rows[0].user_id;
 
         const query3 = `SELECT * FROM users WHERE id = ${user_id}`;
