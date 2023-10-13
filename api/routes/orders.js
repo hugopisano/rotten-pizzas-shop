@@ -108,14 +108,6 @@ router.patch("/:id", function (req, res) {
         req.db.query(query3, (err, rows, fields) => {
           if (err) console.log(err);
 
-          if (amount < 10) {
-            let loyaltyPoints = rows[0].loyaltyPoints + 10;
-          } else if (amount > 10) {
-            let loyaltyPoints = rows[0].loyaltyPoints + 20;
-          } else if (amount > 20) {
-            let loyaltyPoints = rows[0].loyaltyPoints + 30;
-          }
-
           const query4 = `UPDATE users SET loyaltyPoints=${loyaltyPoints} WHERE id = ${user_id}`;
 
           req.db.query(query4, (err, rows, fields) => {
