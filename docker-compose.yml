@@ -39,3 +39,4 @@ services:
 
 networks:
   rps:
+    driver: bridge
