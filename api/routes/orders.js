@@ -103,7 +103,6 @@ router.patch("/:id", async (req, res) => {
     const orderId = req.params.id;
 
     if (req.body.status === "validated") {
-      // TODO: Check if there's enough stock
       const pizzasInOrder = await queryDB(req.db, "SELECT * FROM orders_pizzas WHERE order_id = ?", [orderId]);
 
       for (const pizza of pizzasInOrder) {
@@ -133,7 +132,7 @@ router.patch("/:id", async (req, res) => {
       const orders = await queryDB(req.db, "SELECT * FROM orders WHERE id = ?", [orderId]);
       const userId = orders[0].user_id;
 
-      const loyaltyPoints = 10; // This is just a placeholder. You should define how you calculate this.
+      const loyaltyPoints = 10;
       await queryDB(req.db, "UPDATE users SET loyaltyPoints = ? WHERE id = ?", [loyaltyPoints, userId]);
     }
 
