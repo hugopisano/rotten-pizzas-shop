@@ -132,7 +132,6 @@ router.patch("/:id", function (req, res) {
         req.db.query(query_PizzasInOrder, (err, rows, fields) => {
           if (err) throw err;
 
-          let pizzas = rows;
           rows.forEach((element) => {
             const queryIngredients = `SELECT * FROM ingredients as ig INNER JOIN pizzas_ingredients as pi ON pi.ingredient_id = ig.id AND pi.pizza_id = ${element.pizza_id};`;
 
