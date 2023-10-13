@@ -32,8 +32,6 @@ app.use("/orders", orders);
 app.use("/pizzas", pizzas);
 app.use("/auth", auth);
 
-connection.destroy();
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
